@@ -94,7 +94,7 @@ export default function HomePage() {
 
       // Store in sessionStorage and redirect
       sessionStorage.setItem("outreachData", JSON.stringify(data))
-      router.push("/signup")
+      router.push("/results")
     } catch (error) {
       console.error("Error generating outreach kit:", error)
       setUrlError("Failed to generate outreach kit. Please try again.")

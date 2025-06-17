@@ -4,9 +4,10 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Key } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import type { User } from '@supabase/supabase-js'
 
 export function Navigation() {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [isDemo, setIsDemo] = useState(false)
   const router = useRouter()
@@ -98,14 +99,6 @@ export function Navigation() {
 
           {/* Auth Links */}
           <div className="flex items-center gap-4">
-            {/* Debug info in development */}
-            {process.env.NODE_ENV === "development" && (
-              <span className="text-xs text-gray-400">
-                {isDemo ? "Demo" : "Live"} |{" "}
-                {loading ? "Loading..." : user ? `Logged in: ${user.email}` : "Not logged in"}
-              </span>
-            )}
-
             {loading ? (
               <div className="w-16 h-4 bg-gray-200 animate-pulse rounded"></div>
             ) : user ? (
@@ -116,12 +109,20 @@ export function Navigation() {
                 LOG OUT
               </button>
             ) : (
-              <button
-                onClick={() => router.push("/login")}
-                className="text-gray-600 hover:text-gray-800 font-medium text-sm tracking-wide uppercase transition-colors"
-              >
-                LOG IN
-              </button>
+              <>
+                <button
+                  onClick={() => router.push("/login")}
+                  className="text-gray-600 hover:text-gray-800 font-medium text-sm tracking-wide uppercase transition-colors"
+                >
+                  LOG IN
+                </button>
+                <button
+                  onClick={() => router.push("/signup")}
+                  className="text-gray-600 hover:text-gray-800 font-medium text-sm tracking-wide uppercase transition-colors ml-2"
+                >
+                  SIGN UP
+                </button>
+              </>
             )}
           </div>
         </div>

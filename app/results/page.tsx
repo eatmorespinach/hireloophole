@@ -150,17 +150,6 @@ export default function ResultsPage() {
   const emailAddressOptions = [mockEmailAddresses.primary, mockEmailAddresses.alternative]
 
   useEffect(() => {
-    // Check if user is authenticated
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      setUser(user)
-    }
-    getUser()
-  }, [])
-
-  useEffect(() => {
     const storedData = sessionStorage.getItem("outreachData")
     if (storedData) {
       const parsedData = JSON.parse(storedData)
