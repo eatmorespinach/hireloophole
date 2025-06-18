@@ -65,6 +65,12 @@ interface OutreachData {
     linkedinUrl: string
   }>
   tips: string[]
+  companyName: string
+  ceoLinkedInUrl: string
+  ceoEmail: string
+  departmentHeadLinkedInUrl: string
+  departmentHeadEmail: string
+  jobPostUrl?: string
 }
 
 // Mock CEO data since it's not in the current data structure
@@ -234,32 +240,40 @@ export default function ResultsPage() {
         <CardContent className="space-y-6">
           {/* Contact Info with LinkedIn Button - Smaller image with aligned spacing */}
           <div className="flex items-start gap-4">
-            <img
-              src={contact.profileImage || "/placeholder.svg?height=96&width=96"}
-              alt={contact.name}
-              className="w-24 h-24 rounded-full" // Reduced from w-28 h-28
-              onError={(e) => {
-                e.currentTarget.src = "/placeholder.svg?height=96&width=96"
-              }}
-            />
+            {contact ? (
+              <img
+                src={contact.profileImage || "/placeholder.svg?height=96&width=96"}
+                alt={contact.name || "Contact"}
+                className="w-24 h-24 rounded-full"
+                onError={(e) => {
+                  e.currentTarget.src = "/placeholder.svg?height=96&width=96"
+                }}
+              />
+            ) : (
+              <img
+                src="/placeholder.svg?height=96&width=96"
+                alt="No contact"
+                className="w-24 h-24 rounded-full"
+              />
+            )}
             <div className="flex-1 flex flex-col justify-between h-24">
               {" "}
               {/* Match height of image */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-800">{contact.name}</h3>
-                <p className="text-gray-600 mb-1">{contact.title}</p> {/* Reduced from mb-2 to mb-1 */}
+                <h3 className="text-lg font-semibold text-gray-800">{contact?.name || "Contact"}</h3>
+                <p className="text-gray-600 mb-1">{contact?.title || "No title"}</p> {/* Reduced from mb-2 to mb-1 */}
               </div>
               <div className="self-start">
                 {" "}
                 {/* Align button to bottom */}
                 <Button
                   size="sm"
-                  onClick={() => window.open(contact.linkedinUrl, "_blank")}
+                  onClick={() => window.open(contact?.linkedinUrl, "_blank")}
                   className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-xs"
                 >
                   <Linkedin className="h-3 w-3" />
                   Open{" "}
-                  {contact.linkedinUrl.split("/in/")[1] ? `/in/${contact.linkedinUrl.split("/in/")[1]}` : "Profile"}
+                  {contact?.linkedinUrl?.split("/in/")[1] ? `/in/${contact.linkedinUrl.split("/in/")[1]}` : "Profile"}
                 </Button>
               </div>
             </div>
@@ -492,10 +506,47 @@ export default function ResultsPage() {
     )
   }
 
+  // Extract new API fields
+  const {
+    companyName,
+    ceoLinkedInUrl,
+    ceoEmail,
+    departmentHeadLinkedInUrl,
+    departmentHeadEmail,
+    jobPostUrl,
+  } = data;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50">
       {/* Navigation */}
       <Navigation />
+
+      {/* API Output Section */}
+      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-6 mt-8 mb-8">
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">Job Post Insights</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <div className="font-semibold text-gray-700">Company Name:</div>
+            <div className="text-gray-900">{companyName || <span className="italic text-gray-400">N/A</span>}</div>
+          </div>
+          <div>
+            <div className="font-semibold text-gray-700">CEO LinkedIn:</div>
+            <a href={ceoLinkedInUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline break-all">{ceoLinkedInUrl || <span className="italic text-gray-400">N/A</span>}</a>
+          </div>
+          <div>
+            <div className="font-semibold text-gray-700">CEO Email:</div>
+            <div className="text-gray-900">{ceoEmail || <span className="italic text-gray-400">N/A</span>}</div>
+          </div>
+          <div>
+            <div className="font-semibold text-gray-700">Department Head LinkedIn:</div>
+            <a href={departmentHeadLinkedInUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline break-all">{departmentHeadLinkedInUrl || <span className="italic text-gray-400">N/A</span>}</a>
+          </div>
+          <div>
+            <div className="font-semibold text-gray-700">Department Head Email:</div>
+            <div className="text-gray-900">{departmentHeadEmail || <span className="italic text-gray-400">N/A</span>}</div>
+          </div>
+        </div>
+      </div>
 
       <div className="flex">
         {/* Sidebar */}
@@ -546,15 +597,16 @@ export default function ResultsPage() {
                 <p>Here's everything you need to bypass the resume pile</p>
                 <p className="text-center">
                   for your{" "}
-                  <a
-                    href={data.jobDetails.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-orange-600 hover:text-orange-700 font-medium underline"
-                  >
-                    {data.jobDetails.title}
-                  </a>{" "}
-                  role.
+                  {jobPostUrl && (
+                    <a
+                      href={jobPostUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline font-medium"
+                    >
+                      {data.jobDetails.title}
+                    </a>
+                  )}
                 </p>
               </div>
             </div>
@@ -562,7 +614,12 @@ export default function ResultsPage() {
             <div className="grid gap-6">
               {/* Hiring Manager Section */}
               <ContactSection
-                contact={data.hiringManager}
+                contact={{
+                  name: "Hiring Manager",
+                  title: "Department Head",
+                  email: departmentHeadEmail,
+                  linkedinUrl: departmentHeadLinkedInUrl,
+                }}
                 sectionTitle="Hiring Manager"
                 linkedInMessageIndex={hmLinkedInMessageIndex}
                 setLinkedInMessageIndex={setHmLinkedInMessageIndex}
@@ -577,7 +634,12 @@ export default function ResultsPage() {
 
               {/* CEO Section */}
               <ContactSection
-                contact={data.ceo}
+                contact={{
+                  name: "CEO",
+                  title: "CEO & Founder",
+                  email: ceoEmail,
+                  linkedinUrl: ceoLinkedInUrl,
+                }}
                 sectionTitle="CEO"
                 linkedInMessageIndex={ceoLinkedInMessageIndex}
                 setLinkedInMessageIndex={setCeoLinkedInMessageIndex}
@@ -597,34 +659,38 @@ export default function ResultsPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {data.alternativeContacts.map((contact, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                          <h4 className="font-medium text-gray-800">{contact.name}</h4>
-                          <p className="text-sm text-gray-600">{contact.title}</p>
+                    {Array.isArray(data.alternativeContacts) && data.alternativeContacts.length > 0 ? (
+                      data.alternativeContacts.map((contact, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div>
+                            <h4 className="font-medium text-gray-800">{contact.name}</h4>
+                            <p className="text-sm text-gray-600">{contact.title}</p>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => copyToClipboard(contact.email, `alt-email-${index}`)}
+                            >
+                              {copiedItems.has(`alt-email-${index}`) ? (
+                                <CheckCircle className="h-4 w-4" />
+                              ) : (
+                                <Mail className="h-4 w-4" />
+                              )}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => window.open(contact.linkedinUrl, "_blank")}
+                            >
+                              <Linkedin className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => copyToClipboard(contact.email, `alt-email-${index}`)}
-                          >
-                            {copiedItems.has(`alt-email-${index}`) ? (
-                              <CheckCircle className="h-4 w-4" />
-                            ) : (
-                              <Mail className="h-4 w-4" />
-                            )}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => window.open(contact.linkedinUrl, "_blank")}
-                          >
-                            <Linkedin className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
+                      ))
+                    ) : (
+                      <div className="text-gray-500 italic">No alternative contacts found.</div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -636,14 +702,18 @@ export default function ResultsPage() {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {data.tips.map((tip, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <Badge variant="secondary" className="mt-0.5 bg-orange-100 text-orange-700">
-                          {index + 1}
-                        </Badge>
-                        <span className="text-gray-700">{tip}</span>
-                      </li>
-                    ))}
+                    {Array.isArray(data.tips) && data.tips.length > 0 ? (
+                      data.tips.map((tip, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <Badge variant="secondary" className="mt-0.5 bg-orange-100 text-orange-700">
+                            {index + 1}
+                          </Badge>
+                          <span className="text-gray-700">{tip}</span>
+                        </li>
+                      ))
+                    ) : (
+                      <li className="text-gray-500 italic">No tips available.</li>
+                    )}
                   </ul>
                 </CardContent>
               </Card>
