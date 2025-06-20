@@ -70,6 +70,10 @@ interface OutreachData {
   ceoEmail: string
   departmentHeadLinkedInUrl: string
   departmentHeadEmail: string
+  departmentHeadFirstName?: string
+  departmentHeadLastName?: string
+  ceoFirstName?: string
+  ceoLastName?: string
   jobPostUrl?: string
 }
 
@@ -131,12 +135,6 @@ Ready when you are!
   },
 }
 
-// Mock email addresses - 2 options
-const mockEmailAddresses = {
-  primary: "sarah.chen@techcorp.com",
-  alternative: "s.chen@techcorp.com",
-}
-
 export default function ResultsPage() {
   const [data, setData] = useState<OutreachData | null>(null)
   const [copiedItems, setCopiedItems] = useState<Set<string>>(new Set())
@@ -146,14 +144,11 @@ export default function ResultsPage() {
   const [ceoLinkedInMessageIndex, setCeoLinkedInMessageIndex] = useState(0)
   const [hmEmailMessageIndex, setHmEmailMessageIndex] = useState(0)
   const [ceoEmailMessageIndex, setCeoEmailMessageIndex] = useState(0)
-  const [hmEmailAddressIndex, setHmEmailAddressIndex] = useState(0)
-  const [ceoEmailAddressIndex, setCeoEmailAddressIndex] = useState(0)
   const [hmEmailExpanded, setHmEmailExpanded] = useState(true) // Default to expanded
   const [ceoEmailExpanded, setCeoEmailExpanded] = useState(true) // Default to expanded
   const router = useRouter()
 
   const messageTypes = ["standard", "personal", "silly"] as const
-  const emailAddressOptions = [mockEmailAddresses.primary, mockEmailAddresses.alternative]
 
   useEffect(() => {
     const storedData = sessionStorage.getItem("outreachData")
@@ -210,8 +205,6 @@ export default function ResultsPage() {
     setLinkedInMessageIndex,
     emailMessageIndex,
     setEmailMessageIndex,
-    emailAddressIndex,
-    setEmailAddressIndex,
     emailExpanded,
     setEmailExpanded,
     sectionId,
@@ -222,15 +215,12 @@ export default function ResultsPage() {
     setLinkedInMessageIndex: (index: number) => void
     emailMessageIndex: number
     setEmailMessageIndex: (index: number) => void
-    emailAddressIndex: number
-    setEmailAddressIndex: (index: number) => void
     emailExpanded: boolean
     setEmailExpanded: (expanded: boolean) => void
     sectionId: string
   }) => {
     const currentLinkedInMessage = data?.linkedinMessages?.[messageTypes[linkedInMessageIndex]] || ""
     const currentEmailMessage = data?.emailMessages?.[messageTypes[emailMessageIndex]] || { subject: "", body: "" }
-    const currentEmailAddress = emailAddressOptions[emailAddressIndex]
 
     return (
       <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
@@ -263,37 +253,102 @@ export default function ResultsPage() {
                 <h3 className="text-lg font-semibold text-gray-800">{contact?.name || "Contact"}</h3>
                 <p className="text-gray-600 mb-1">{contact?.title || "No title"}</p> {/* Reduced from mb-2 to mb-1 */}
               </div>
-              <div className="self-start">
-                {" "}
-                {/* Align button to bottom */}
-                <Button
-                  size="sm"
-                  onClick={() => window.open(contact?.linkedinUrl, "_blank")}
-                  className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-xs"
-                >
-                  <Linkedin className="h-3 w-3" />
-                  Open{" "}
-                  {contact?.linkedinUrl?.split("/in/")[1] ? `/in/${contact.linkedinUrl.split("/in/")[1]}` : "Profile"}
-                </Button>
-              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full justify-start text-blue-600"
+                onClick={() => {
+                  console.log("LinkedIn button clicked for", sectionTitle, "URL:", contact?.linkedinUrl)
+                  if (contact?.linkedinUrl) {
+                    window.open(contact.linkedinUrl, "_blank")
+                  } else {
+                    console.log("No LinkedIn URL available for", sectionTitle)
+                  }
+                }}
+                disabled={!contact?.linkedinUrl}
+              >
+                <Linkedin className="mr-2 h-4 w-4" /> 
+                {contact?.linkedinUrl ? "View on LinkedIn" : "No LinkedIn Available"}
+              </Button>
             </div>
           </div>
 
-          {/* LinkedIn Section */}
-          <div className="space-y-4">
-            {/* LinkedIn Message Draft with Carousel */}
+          {/* Email Section - Added padding-top for visual separation */}
+          <div className="space-y-4 pt-6">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Personalized LI Drafts</label>
+              <label className="block text-sm font-medium text-gray-700">Email</label>
               <div className="border rounded-lg bg-gray-50">
-                {/* Message Type Indicator */}
-                <div className="flex items-center justify-between p-3 border-b bg-white rounded-t-lg">
+                <div className="flex items-center gap-2 p-3">
+                  <div className="flex-1 text-gray-800 text-sm">{contact?.email || "N/A"}</div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => copyToClipboard(contact?.email || "", `${sectionId}-email`)}
+                  >
+                    {copiedItems.has(`${sectionId}-email`) ? (
+                      <CheckCircle className="h-4 w-4" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Email Message Draft - Collapsible with Carousel */}
+            <div className="space-y-2">
+              <div
+                className="flex items-center justify-between cursor-pointer p-2 border-b"
+                onClick={() => setEmailExpanded(!emailExpanded)}
+              >
+                <label className="text-sm font-medium text-gray-700">Email Draft</label>
+                {emailExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </div>
+              {emailExpanded && (
+                <div className="border rounded-lg bg-gray-50">
+                  <div className="flex items-center justify-between p-2 border-b bg-white rounded-t-lg">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-500 capitalize">{messageTypes[emailMessageIndex]}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setEmailMessageIndex(Math.max(0, emailMessageIndex - 1))}
+                        disabled={emailMessageIndex === 0}
+                        className="h-6 w-6 p-0"
+                      >
+                        <ChevronLeft className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setEmailMessageIndex(Math.min(messageTypes.length - 1, emailMessageIndex + 1))}
+                        disabled={emailMessageIndex === messageTypes.length - 1}
+                        className="h-6 w-6 p-0"
+                      >
+                        <ChevronRight className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="p-4 bg-white rounded-b-lg border-t">
+                    <h4 className="text-md font-semibold text-gray-800 mb-2">{currentEmailMessage.subject}</h4>
+                    <p
+                      className="text-gray-700 whitespace-pre-wrap text-sm"
+                      dangerouslySetInnerHTML={{ __html: currentEmailMessage.body.replace(/\n/g, "<br />") }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* LinkedIn Message Draft - No collapsible, just carousel */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">LinkedIn Draft</label>
+              <div className="border rounded-lg bg-gray-50">
+                <div className="flex items-center justify-between p-2 border-b bg-white rounded-t-lg">
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="capitalize">
-                      {messageTypes[linkedInMessageIndex]}
-                    </Badge>
-                    <span className="text-xs text-gray-500">
-                      {linkedInMessageIndex + 1} of {messageTypes.length}
-                    </span>
+                    <span className="text-xs text-gray-500 capitalize">{messageTypes[linkedInMessageIndex]}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Button
@@ -318,176 +373,19 @@ export default function ResultsPage() {
                     </Button>
                   </div>
                 </div>
-
-                {/* Message Content */}
-                <div className="flex items-start gap-2 p-3">
-                  <div className="flex-1 text-gray-800 text-sm">{currentLinkedInMessage}</div>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() =>
-                      copyToClipboard(currentLinkedInMessage, `${sectionId}-linkedin-${linkedInMessageIndex}`)
-                    }
-                  >
-                    {copiedItems.has(`${sectionId}-linkedin-${linkedInMessageIndex}`) ? (
-                      <CheckCircle className="h-4 w-4" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
+                <div className="p-4 bg-white rounded-b-lg border-t">
+                  <p
+                    className="text-gray-700 whitespace-pre-wrap text-sm"
+                    dangerouslySetInnerHTML={{
+                      __html: currentLinkedInMessage
+                        .replace(/\[Name\]/g, `<strong>${contact?.name || "there"}</strong>`)
+                        .replace(/\[Job Title\]/g, `<strong>${data?.jobDetails?.title || "the role"}</strong>`)
+                        .replace(/\[Company\]/g, `<strong>${data?.jobDetails?.company || "your company"}</strong>`)
+                        .replace(/\n/g, "<br />"),
+                    }}
+                  />
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Email Section - Added padding-top for visual separation */}
-          <div className="space-y-4 pt-6">
-            {/* Email Address with Carousel */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Email</label>
-              <div className="border rounded-lg bg-gray-50">
-                {/* Email Address Indicator */}
-                <div className="flex items-center justify-between p-2 border-b bg-white rounded-t-lg">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500">
-                      {emailAddressIndex + 1} of {emailAddressOptions.length}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setEmailAddressIndex(Math.max(0, emailAddressIndex - 1))}
-                      disabled={emailAddressIndex === 0}
-                      className="h-6 w-6 p-0"
-                    >
-                      <ChevronLeft className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() =>
-                        setEmailAddressIndex(Math.min(emailAddressOptions.length - 1, emailAddressIndex + 1))
-                      }
-                      disabled={emailAddressIndex === emailAddressOptions.length - 1}
-                      className="h-6 w-6 p-0"
-                    >
-                      <ChevronRight className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Email Address Content */}
-                <div className="flex items-center gap-2 p-3">
-                  <div className="flex-1 text-gray-800 text-sm">{currentEmailAddress}</div>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => copyToClipboard(currentEmailAddress, `${sectionId}-email-${emailAddressIndex}`)}
-                  >
-                    {copiedItems.has(`${sectionId}-email-${emailAddressIndex}`) ? (
-                      <CheckCircle className="h-4 w-4" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Email Message Draft - Collapsible with Carousel */}
-            <div className="space-y-2">
-              <button
-                onClick={() => setEmailExpanded(!emailExpanded)}
-                className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900"
-              >
-                Email Drafts
-                {emailExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-              </button>
-
-              {emailExpanded && (
-                <div className="space-y-3 pl-4 border-l-2 border-gray-200">
-                  {/* Email Type Indicator */}
-                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg border">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="capitalize">
-                        {messageTypes[emailMessageIndex]}
-                      </Badge>
-                      <span className="text-xs text-gray-500">
-                        {emailMessageIndex + 1} of {messageTypes.length}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => setEmailMessageIndex(Math.max(0, emailMessageIndex - 1))}
-                        disabled={emailMessageIndex === 0}
-                        className="h-6 w-6 p-0"
-                      >
-                        <ChevronLeft className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => setEmailMessageIndex(Math.min(messageTypes.length - 1, emailMessageIndex + 1))}
-                        disabled={emailMessageIndex === messageTypes.length - 1}
-                        className="h-6 w-6 p-0"
-                      >
-                        <ChevronRight className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Subject Line */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">Subject Line</label>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 p-2 bg-gray-50 rounded border text-sm">{currentEmailMessage.subject}</div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() =>
-                          copyToClipboard(
-                            currentEmailMessage.subject,
-                            `${sectionId}-email-subject-${emailMessageIndex}`,
-                          )
-                        }
-                      >
-                        {copiedItems.has(`${sectionId}-email-subject-${emailMessageIndex}`) ? (
-                          <CheckCircle className="h-3 w-3" />
-                        ) : (
-                          <Copy className="h-3 w-3" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Message Body */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">Message Body</label>
-                    <div className="flex gap-2">
-                      <div className="flex-1 p-2 bg-gray-50 rounded border text-sm">
-                        <pre className="whitespace-pre-wrap font-sans text-xs">{currentEmailMessage.body}</pre>
-                      </div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() =>
-                          copyToClipboard(currentEmailMessage.body, `${sectionId}-email-body-${emailMessageIndex}`)
-                        }
-                        className="self-start"
-                      >
-                        {copiedItems.has(`${sectionId}-email-body-${emailMessageIndex}`) ? (
-                          <CheckCircle className="h-3 w-3" />
-                        ) : (
-                          <Copy className="h-3 w-3" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </CardContent>
@@ -495,242 +393,154 @@ export default function ResultsPage() {
     )
   }
 
-  if (!data) {
+  if (!data)
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading your outreach kit...</p>
-        </div>
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-lg">Loading...</div>
       </div>
     )
-  }
 
-  // Extract new API fields
-  const {
-    companyName,
-    ceoLinkedInUrl,
+  const { jobDetails, hiringManager, ceo, tips, alternativeContacts, ceoEmail, ceoLinkedInUrl } = data
+
+  // Debug: Log the data to see what we're working with
+  console.log("Results page data:", {
     ceoEmail,
-    departmentHeadLinkedInUrl,
-    departmentHeadEmail,
-    jobPostUrl,
-  } = data;
+    ceoLinkedInUrl,
+    departmentHeadEmail: data.departmentHeadEmail,
+    departmentHeadLinkedInUrl: data.departmentHeadLinkedInUrl
+  })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50">
-      {/* Navigation */}
+    <>
       <Navigation />
-
-      {/* API Output Section */}
-      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-6 mt-8 mb-8">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">Job Post Insights</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <div className="font-semibold text-gray-700">Company Name:</div>
-            <div className="text-gray-900">{companyName || <span className="italic text-gray-400">N/A</span>}</div>
-          </div>
-          <div>
-            <div className="font-semibold text-gray-700">CEO LinkedIn:</div>
-            <a href={ceoLinkedInUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline break-all">{ceoLinkedInUrl || <span className="italic text-gray-400">N/A</span>}</a>
-          </div>
-          <div>
-            <div className="font-semibold text-gray-700">CEO Email:</div>
-            <div className="text-gray-900">{ceoEmail || <span className="italic text-gray-400">N/A</span>}</div>
-          </div>
-          <div>
-            <div className="font-semibold text-gray-700">Department Head LinkedIn:</div>
-            <a href={departmentHeadLinkedInUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline break-all">{departmentHeadLinkedInUrl || <span className="italic text-gray-400">N/A</span>}</a>
-          </div>
-          <div>
-            <div className="font-semibold text-gray-700">Department Head Email:</div>
-            <div className="text-gray-900">{departmentHeadEmail || <span className="italic text-gray-400">N/A</span>}</div>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex">
-        {/* Sidebar */}
-        <div className={`transition-all duration-300 ${sidebarCollapsed ? "w-0" : "w-80"} overflow-hidden`}>
-          <ResultsSidebar currentData={data} onLoadSearch={handleLoadSearch} isCollapsed={sidebarCollapsed} />
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1 min-w-0">
-          <div className="px-6 py-8 max-w-4xl mx-auto">
-            {/* Header with Sidebar Toggle */}
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  onClick={() => router.push("/")}
-                  className="flex items-center gap-2 text-gray-600 hover:text-gray-800"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Back to Home
-                </Button>
-              </div>
-
-              {/* Sidebar Toggle Button */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={toggleSidebar}
-                className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white"
-              >
-                {sidebarCollapsed ? (
-                  <>
-                    <PanelLeft className="h-4 w-4" />
-                    Show History
-                  </>
-                ) : (
-                  <>
-                    <PanelLeftClose className="h-4 w-4" />
-                    Hide History
-                  </>
-                )}
+      <div className="flex h-screen bg-gray-50/90">
+        <ResultsSidebar currentData={data} onLoadSearch={handleLoadSearch} isCollapsed={sidebarCollapsed} />
+        <main className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? "ml-16" : "ml-64"}`}>
+          <div className="p-6 space-y-8 h-full overflow-y-auto">
+            <div className="flex justify-between items-center">
+              <Button variant="ghost" onClick={() => router.push("/")}>
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back to Search
+              </Button>
+              <Button variant="ghost" onClick={toggleSidebar}>
+                {sidebarCollapsed ? <PanelLeft /> : <PanelLeftClose />}
               </Button>
             </div>
 
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">🎉 Your Outreach Kit is Ready!</h1>
-              <div className="text-gray-600">
-                <p>Here's everything you need to bypass the resume pile</p>
-                <p className="text-center">
-                  for your{" "}
-                  {jobPostUrl && (
+            {/* Job Details Card */}
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle>🎯 Job Details</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {jobDetails ? (
+                  <>
+                    <div className="text-2xl font-bold text-gray-900">{jobDetails.title}</div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-lg text-gray-700">{jobDetails.company}</div>
+                      <Badge variant="secondary">{jobDetails.department}</Badge>
+                    </div>
+                    <div className="text-gray-600">{jobDetails.location}</div>
                     <a
-                      href={jobPostUrl}
+                      href={jobDetails.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline font-medium"
+                      className="text-blue-600 hover:underline"
                     >
-                      {data.jobDetails.title}
+                      View Job Post
                     </a>
-                  )}
-                </p>
-              </div>
-            </div>
+                  </>
+                ) : (
+                  <div className="italic text-gray-500">Job details not available.</div>
+                )}
+              </CardContent>
+            </Card>
 
-            <div className="grid gap-6">
+            {/* Hiring Manager & CEO Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Hiring Manager Section */}
-              <ContactSection
-                contact={{
-                  name: "Hiring Manager",
-                  title: "Department Head",
-                  email: departmentHeadEmail,
-                  linkedinUrl: departmentHeadLinkedInUrl,
-                }}
-                sectionTitle="Hiring Manager"
-                linkedInMessageIndex={hmLinkedInMessageIndex}
-                setLinkedInMessageIndex={setHmLinkedInMessageIndex}
-                emailMessageIndex={hmEmailMessageIndex}
-                setEmailMessageIndex={setHmEmailMessageIndex}
-                emailAddressIndex={hmEmailAddressIndex}
-                setEmailAddressIndex={setHmEmailAddressIndex}
-                emailExpanded={hmEmailExpanded}
-                setEmailExpanded={setHmEmailExpanded}
-                sectionId="hm"
-              />
+              {data.departmentHeadEmail && (
+                <ContactSection
+                  contact={{
+                    name: `${data.departmentHeadFirstName || ''} ${data.departmentHeadLastName || ''}`.trim() || "LikelyHiring Manager",
+                    title: "Department Head",
+                    email: data.departmentHeadEmail,
+                    linkedinUrl: data.departmentHeadLinkedInUrl,
+                  }}
+                  sectionTitle="Likely Hiring Manager"
+                  linkedInMessageIndex={hmLinkedInMessageIndex}
+                  setLinkedInMessageIndex={setHmLinkedInMessageIndex}
+                  emailMessageIndex={hmEmailMessageIndex}
+                  setEmailMessageIndex={setHmEmailMessageIndex}
+                  emailExpanded={hmEmailExpanded}
+                  setEmailExpanded={setHmEmailExpanded}
+                  sectionId="hm"
+                />
+              )}
 
               {/* CEO Section */}
-              <ContactSection
-                contact={{
-                  name: "CEO",
-                  title: "CEO & Founder",
-                  email: ceoEmail,
-                  linkedinUrl: ceoLinkedInUrl,
-                }}
-                sectionTitle="CEO"
-                linkedInMessageIndex={ceoLinkedInMessageIndex}
-                setLinkedInMessageIndex={setCeoLinkedInMessageIndex}
-                emailMessageIndex={ceoEmailMessageIndex}
-                setEmailMessageIndex={setCeoEmailMessageIndex}
-                emailAddressIndex={ceoEmailAddressIndex}
-                setEmailAddressIndex={setCeoEmailAddressIndex}
-                emailExpanded={ceoEmailExpanded}
-                setEmailExpanded={setCeoEmailExpanded}
-                sectionId="ceo"
-              />
+              {data.ceoEmail && (
+                <ContactSection
+                  contact={{
+                    name: `${data.ceoFirstName || ''} ${data.ceoLastName || ''}`.trim() || "CEO",
+                    title: "CEO",
+                    email: data.ceoEmail,
+                    linkedinUrl: data.ceoLinkedInUrl,
+                  }}
+                  sectionTitle="CEO"
+                  linkedInMessageIndex={ceoLinkedInMessageIndex}
+                  setLinkedInMessageIndex={setCeoLinkedInMessageIndex}
+                  emailMessageIndex={ceoEmailMessageIndex}
+                  setEmailMessageIndex={setCeoEmailMessageIndex}
+                  emailExpanded={ceoEmailExpanded}
+                  setEmailExpanded={setCeoEmailExpanded}
+                  sectionId="ceo"
+                />
+              )}
+            </div>
 
-              {/* Alternative Contacts - Keep as is */}
+            {/* Alternative Contacts */}
+            {Array.isArray(data.alternativeContacts) && data.alternativeContacts.length > 0 && (
               <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">👥 Alternative Contacts</CardTitle>
+                  <CardTitle>👥 Alternative Contacts</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {Array.isArray(data.alternativeContacts) && data.alternativeContacts.length > 0 ? (
-                      data.alternativeContacts.map((contact, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                          <div>
-                            <h4 className="font-medium text-gray-800">{contact.name}</h4>
-                            <p className="text-sm text-gray-600">{contact.title}</p>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => copyToClipboard(contact.email, `alt-email-${index}`)}
-                            >
-                              {copiedItems.has(`alt-email-${index}`) ? (
-                                <CheckCircle className="h-4 w-4" />
-                              ) : (
-                                <Mail className="h-4 w-4" />
-                              )}
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => window.open(contact.linkedinUrl, "_blank")}
-                            >
-                              <Linkedin className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="text-gray-500 italic">No alternative contacts found.</div>
-                    )}
-                  </div>
+                <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {data.alternativeContacts.map((contact, index) => (
+                    <div key={index} className="p-4 border rounded-lg bg-white">
+                      <div className="font-semibold">{contact.name}</div>
+                      <div className="text-sm text-gray-600">{contact.title}</div>
+                      <div className="text-sm text-blue-600 mt-2">
+                        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                      </div>
+                      <div className="text-sm text-blue-600">
+                        <a href={contact.linkedinUrl} target="_blank" rel="noopener noreferrer">
+                          LinkedIn
+                        </a>
+                      </div>
+                    </div>
+                  ))}
                 </CardContent>
               </Card>
+            )}
 
-              {/* Pro Tips - Keep as is */}
+            {/* Tips Section */}
+            {Array.isArray(data.tips) && data.tips.length > 0 && (
               <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">💡 Pro Tips</CardTitle>
+                  <CardTitle>💡 Tips</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2">
-                    {Array.isArray(data.tips) && data.tips.length > 0 ? (
-                      data.tips.map((tip, index) => (
-                        <li key={index} className="flex items-start gap-2">
-                          <Badge variant="secondary" className="mt-0.5 bg-orange-100 text-orange-700">
-                            {index + 1}
-                          </Badge>
-                          <span className="text-gray-700">{tip}</span>
-                        </li>
-                      ))
-                    ) : (
-                      <li className="text-gray-500 italic">No tips available.</li>
-                    )}
+                  <ul className="list-disc list-inside space-y-2 text-gray-700">
+                    {data.tips.map((tip, index) => (
+                      <li key={index}>{tip}</li>
+                    ))}
                   </ul>
                 </CardContent>
               </Card>
-            </div>
-
-            {/* CTA */}
-            <div className="text-center mt-8">
-              <Button
-                onClick={() => router.push("/")}
-                className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white px-8 py-3 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-              >
-                Generate Another Kit
-              </Button>
-            </div>
+            )}
           </div>
-        </div>
+        </main>
       </div>
-    </div>
+    </>
   )
 }
