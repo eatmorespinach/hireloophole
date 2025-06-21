@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Clock, ExternalLink, Trash2, Crown } from "lucide-react"
+import { Clock, ExternalLink, Trash2, Crown, PanelLeftClose } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 
@@ -18,9 +18,10 @@ interface ResultsSidebarProps {
   currentData: any
   onLoadSearch: (data: any) => void
   isCollapsed: boolean
+  onToggleCollapse?: () => void
 }
 
-export function ResultsSidebar({ currentData, onLoadSearch, isCollapsed }: ResultsSidebarProps) {
+export function ResultsSidebar({ currentData, onLoadSearch, isCollapsed, onToggleCollapse }: ResultsSidebarProps) {
   const [pastSearches, setPastSearches] = useState<PastSearch[]>([])
 
   useEffect(() => {
@@ -103,6 +104,21 @@ export function ResultsSidebar({ currentData, onLoadSearch, isCollapsed }: Resul
 
   return (
     <div className="w-80 h-screen bg-white/80 backdrop-blur-sm border-r border-gray-200 flex flex-col">
+      {/* Header with collapse button */}
+      {onToggleCollapse && (
+        <div className="p-4 border-b border-gray-200">
+          <div className="flex justify-end items-center">
+            <button
+              onClick={onToggleCollapse}
+              className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+              title="Collapse sidebar"
+            >
+              <PanelLeftClose className="h-5 w-5 text-gray-600" />
+            </button>
+          </div>
+        </div>
+      )}
+      
       <div className="flex-1 overflow-y-auto p-4">
         {/* Upgrade Section */}
         <div className="mb-6">

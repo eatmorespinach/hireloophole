@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Sparkles, Key, ChevronDown, Upload, X } from "lucide-react"
 import { Navigation } from "@/components/navigation"
+import { Footer } from "@/components/footer"
 
 export default function HomePage() {
   const [jobUrl, setJobUrl] = useState("")
@@ -254,7 +255,8 @@ export default function HomePage() {
         </Card>
       </main>
 
-
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

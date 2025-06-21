@@ -4,6 +4,11 @@ export async function POST(request: NextRequest) {
   try {
     const { jobUrl } = await request.json()
 
+    // Enhanced logging for debugging
+    console.log("API Route called with jobUrl:", jobUrl)
+    console.log("Environment check - LOGIC_API_TOKEN exists:", !!process.env.LOGIC_API_TOKEN)
+    console.log("Running on Vercel:", !!process.env.VERCEL)
+
     // Check if API token is available
     if (!process.env.LOGIC_API_TOKEN) {
       console.error("LOGIC_API_TOKEN environment variable is not set")
@@ -11,17 +16,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Call the external scraping API
+    console.log("Making request to Logic API...")
     const apiRes = await fetch("https://api.logic.inc/2024-03-01/documents/extract-company-and-executive-info-from-job-posting/executions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${process.env.LOGIC_API_TOKEN}`
       },
-      body: JSON.stringify({ jobPostUrl: jobUrl })
+      body: JSON.stringify({ jobPostUrl: jobUrl }),
+      // Add timeout for Vercel compatibility
+      signal: AbortSignal.timeout(25000) // 25 second timeout (under Vercel's 30s limit)
     })
 
     // Log the response status for debugging
     console.log("Logic API response status:", apiRes.status)
+    console.log("Logic API response headers:", Object.fromEntries(apiRes.headers.entries()))
 
     if (!apiRes.ok) {
       const errorText = await apiRes.text()
@@ -113,6 +122,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(responseWithTips)
   } catch (error) {
     console.error("Error in mockGenerator:", error)
+    
+    // Log specific error types for better debugging
+    if (error instanceof Error) {
+      console.error("Error name:", error.name)
+      console.error("Error message:", error.message)
+      if (error.name === 'AbortError') {
+        console.error("Request timed out after 25 seconds")
+      }
+    }
     
     // Return fallback data instead of error
     console.log("Returning fallback data due to unexpected error")

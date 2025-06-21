@@ -21,6 +21,7 @@ import {
 import { supabase } from "@/lib/supabase"
 import { Navigation } from "@/components/navigation"
 import { ResultsSidebar } from "@/components/results-sidebar"
+import { Footer } from "@/components/footer"
 
 interface OutreachData {
   jobDetails: {
@@ -89,20 +90,20 @@ const mockCEO = {
 // Mock LinkedIn messages
 const mockLinkedInMessages = {
   standard:
-    "Hi [Name], I saw the [Job Title] role at [Company] and I'm really excited about the opportunity. I'd love to connect and learn more about the position.",
+    "Hi [Name], I saw the [Job Title] at [Company] and I'm really excited about the opportunity. I'd love to connect and learn more about the position.",
   personal:
-    "Hey [Name]! I've been following [Company]'s journey and I'm genuinely impressed by your recent work on [specific project]. I'd love to chat about the [Job Title] role.",
+    "Hey [Name]! I've been following [Company]'s journey and I'm genuinely impressed by your recent work on [specific project]. I'd love to chat about the [Job Title].",
   silly:
-    "Hi [Name]! 🚀 I promise I'm more professional than this emoji suggests, but I couldn't resist reaching out about the [Job Title] role at [Company]!",
+    "Hi [Name]! 🚀 I promise I'm more professional than this emoji suggests, but I had to reach out about the [Job Title] at [Company]",
 }
 
 // Mock Email messages - 50% shorter
 const mockEmailMessages = {
   standard: {
-    subject: "Excited about the [Job Title] role at [Company]",
+    subject: "Been tracking [Company] - Love to connect on any opportunities",
     body: `Hi [Name],
 
-I came across the [Job Title] position at [Company] and I'm genuinely excited about the opportunity.
+I came across the [Job Title] at [Company] and I'm genuinely excited about the opportunity.
 
 I'd love to discuss how my experience with React and TypeScript could help drive [Company]'s frontend initiatives forward.
 
@@ -128,7 +129,7 @@ Best,
 
 I promise I'm more professional than this emoji suggests! 😄
 
-I'm genuinely excited about the [Job Title] role and would love to discuss how I can help [Company]'s frontend team reach new heights.
+I'm genuinely excited about the [Job Title] and would love to discuss how I can help [Company]'s frontend team reach new heights.
 
 Ready when you are!
 [Your Name]`,
@@ -319,7 +320,7 @@ export default function ResultsPage() {
                      dangerouslySetInnerHTML={{
                        __html: currentLinkedInMessage
                          .replace(/\[Name\]/g, `<strong>${getFirstName(contact?.name || "")}</strong>`)
-                         .replace(/\[Job Title\]/g, `<strong>${data?.jobDetails?.title || "the role"}</strong>`)
+                         .replace(/\[Job Title\]/g, `<strong>${data?.jobDetails?.title || "this role"}</strong>`)
                          .replace(/\[Company\]/g, `<strong>${data?.companyName || data?.jobDetails?.company || "your company"}</strong>`)
                          .replace(/\n/g, "<br />"),
                      }}
@@ -389,7 +390,7 @@ export default function ResultsPage() {
                     <h4 className="text-md font-semibold text-gray-800 mb-2">
                       {currentEmailMessage.subject
                         .replace(/\[Name\]/g, getFirstName(contact?.name || ""))
-                        .replace(/\[Job Title\]/g, data?.jobDetails?.title || "the role")
+                        .replace(/\[Job Title\]/g, data?.jobDetails?.title || "this role")
                         .replace(/\[Company\]/g, data?.companyName || data?.jobDetails?.company || "your company")}
                     </h4>
                     <p
@@ -397,7 +398,7 @@ export default function ResultsPage() {
                       dangerouslySetInnerHTML={{ 
                         __html: currentEmailMessage.body
                           .replace(/\[Name\]/g, getFirstName(contact?.name || ""))
-                          .replace(/\[Job Title\]/g, data?.jobDetails?.title || "the role")
+                          .replace(/\[Job Title\]/g, data?.jobDetails?.title || "this role")
                           .replace(/\[Company\]/g, data?.companyName || data?.jobDetails?.company || "your company")
                           .replace(/\n/g, "<br />") 
                       }}
@@ -430,20 +431,39 @@ export default function ResultsPage() {
   })
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50/90 flex flex-col">
       <Navigation />
-      <div className="flex h-screen bg-gray-50/90">
-        <ResultsSidebar currentData={data} onLoadSearch={handleLoadSearch} isCollapsed={sidebarCollapsed} />
-        <main className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? "ml-16" : "ml-64"}`}>
-          <div className="p-6 h-full overflow-y-auto">
+      <div className="flex flex-1">
+        {/* Sidebar - either full width or collapsed */}
+        {sidebarCollapsed ? (
+          <>
+            <div className="w-16 bg-white border-r border-gray-200 min-h-full"></div>
+            <div className="fixed top-20 left-4 z-50">
+              <button
+                onClick={toggleSidebar}
+                className="p-2 bg-white border border-gray-200 shadow-sm hover:bg-gray-50 rounded-md transition-colors"
+                title="Expand sidebar"
+              >
+                <PanelLeft className="h-5 w-5 text-gray-600" />
+              </button>
+            </div>
+          </>
+        ) : (
+          <ResultsSidebar 
+            currentData={data} 
+            onLoadSearch={handleLoadSearch} 
+            isCollapsed={sidebarCollapsed} 
+            onToggleCollapse={toggleSidebar}
+          />
+        )}
+        
+        <main className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? "ml-0" : "ml-0"}`}>
+          <div className="p-6">
             <div className="grid grid-cols-12 gap-4">
               <div className="col-span-8 col-start-3 space-y-8">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-start items-center">
               <Button variant="ghost" onClick={() => router.push("/")}>
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back to Search
-              </Button>
-              <Button variant="ghost" onClick={toggleSidebar}>
-                {sidebarCollapsed ? <PanelLeft /> : <PanelLeftClose />}
               </Button>
             </div>
 
@@ -519,7 +539,7 @@ export default function ResultsPage() {
 
             {/* Tips Section */}
             {Array.isArray(data.tips) && data.tips.length > 0 && (
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm mb-15">
                 <CardHeader>
                   <CardTitle>💡 Tips</CardTitle>
                 </CardHeader>
@@ -537,6 +557,11 @@ export default function ResultsPage() {
           </div>
         </main>
       </div>
-    </>
+      
+      {/* Footer with extra spacing */}
+      <div style={{ paddingTop: '100px' }}>
+        <Footer />
+      </div>
+    </div>
   )
 }
