@@ -90,7 +90,7 @@ export function Navigation() {
       <div className="px-4">
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-10 col-start-2">
-            <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push("/")}>
             <Key className="h-6 w-6 text-black" />

@@ -99,12 +99,12 @@ const mockLinkedInMessages = {
 // Mock Email messages - 50% shorter
 const mockEmailMessages = {
   standard: {
-    subject: "Excited about the Senior Frontend Developer role at TechCorp",
+    subject: "Excited about the [Job Title] role at [Company]",
     body: `Hi [Name],
 
-I came across the Senior Frontend Developer position at TechCorp and I'm genuinely excited about the opportunity.
+I came across the [Job Title] position at [Company] and I'm genuinely excited about the opportunity.
 
-I'd love to discuss how my experience with React and TypeScript could help drive TechCorp's frontend initiatives forward.
+I'd love to discuss how my experience with React and TypeScript could help drive [Company]'s frontend initiatives forward.
 
 Would you be open to a brief conversation?
 
@@ -115,7 +115,7 @@ Best regards,
     subject: "Your recent work on micro-frontends caught my attention",
     body: `Hi [Name],
 
-Your recent work on scaling TechCorp's platform architecture really caught my attention, especially the micro-frontends approach you shared on LinkedIn.
+Your recent work on scaling [Company]'s platform architecture really caught my attention, especially the micro-frontends approach you shared on LinkedIn.
 
 I'd love to chat about how my distributed systems experience could contribute to your team's success.
 
@@ -123,12 +123,12 @@ Best,
 [Your Name]`,
   },
   silly: {
-    subject: "🚀 Frontend Developer ready for takeoff at TechCorp!",
+    subject: "🚀 Frontend Developer ready for takeoff at [Company]!",
     body: `Hi [Name],
 
 I promise I'm more professional than this emoji suggests! 😄
 
-I'm genuinely excited about the Senior Frontend Developer role and would love to discuss how I can help TechCorp's frontend team reach new heights.
+I'm genuinely excited about the [Job Title] role and would love to discuss how I can help [Company]'s frontend team reach new heights.
 
 Ready when you are!
 [Your Name]`,
@@ -149,6 +149,14 @@ export default function ResultsPage() {
   const router = useRouter()
 
   const messageTypes = ["standard", "personal", "silly"] as const
+
+  // Helper function to extract first name from full name
+  // This function takes a full name and returns just the first name for personalization
+  const getFirstName = (fullName: string): string => {
+    if (!fullName) return "there"
+    const nameParts = fullName.trim().split(" ")
+    return nameParts[0] || "there"
+  }
 
   useEffect(() => {
     const storedData = sessionStorage.getItem("outreachData")
@@ -273,8 +281,54 @@ export default function ResultsPage() {
             </div>
           </div>
 
-          {/* Email Section - Added padding-top for visual separation */}
+          {/* LinkedIn Message Draft - Moved above email section for priority */}
           <div className="space-y-4 pt-6">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">LinkedIn Draft</label>
+              <div className="border rounded-lg bg-gray-50">
+                <div className="flex items-center justify-between p-2 border-b bg-white rounded-t-lg">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500 capitalize">{messageTypes[linkedInMessageIndex]}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setLinkedInMessageIndex(Math.max(0, linkedInMessageIndex - 1))}
+                      disabled={linkedInMessageIndex === 0}
+                      className="h-6 w-6 p-0"
+                    >
+                      <ChevronLeft className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() =>
+                        setLinkedInMessageIndex(Math.min(messageTypes.length - 1, linkedInMessageIndex + 1))
+                      }
+                      disabled={linkedInMessageIndex === messageTypes.length - 1}
+                      className="h-6 w-6 p-0"
+                    >
+                      <ChevronRight className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="p-4 bg-white rounded-b-lg border-t">
+                                     <p
+                     className="text-gray-700 whitespace-pre-wrap text-sm"
+                     dangerouslySetInnerHTML={{
+                       __html: currentLinkedInMessage
+                         .replace(/\[Name\]/g, `<strong>${getFirstName(contact?.name || "")}</strong>`)
+                         .replace(/\[Job Title\]/g, `<strong>${data?.jobDetails?.title || "the role"}</strong>`)
+                         .replace(/\[Company\]/g, `<strong>${data?.companyName || data?.jobDetails?.company || "your company"}</strong>`)
+                         .replace(/\n/g, "<br />"),
+                     }}
+                   />
+                </div>
+              </div>
+            </div>
+
+            {/* Email Section - Moved below LinkedIn section */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">Email</label>
               <div className="border rounded-lg bg-gray-50">
@@ -332,60 +386,25 @@ export default function ResultsPage() {
                     </div>
                   </div>
                   <div className="p-4 bg-white rounded-b-lg border-t">
-                    <h4 className="text-md font-semibold text-gray-800 mb-2">{currentEmailMessage.subject}</h4>
+                    <h4 className="text-md font-semibold text-gray-800 mb-2">
+                      {currentEmailMessage.subject
+                        .replace(/\[Name\]/g, getFirstName(contact?.name || ""))
+                        .replace(/\[Job Title\]/g, data?.jobDetails?.title || "the role")
+                        .replace(/\[Company\]/g, data?.companyName || data?.jobDetails?.company || "your company")}
+                    </h4>
                     <p
                       className="text-gray-700 whitespace-pre-wrap text-sm"
-                      dangerouslySetInnerHTML={{ __html: currentEmailMessage.body.replace(/\n/g, "<br />") }}
+                      dangerouslySetInnerHTML={{ 
+                        __html: currentEmailMessage.body
+                          .replace(/\[Name\]/g, getFirstName(contact?.name || ""))
+                          .replace(/\[Job Title\]/g, data?.jobDetails?.title || "the role")
+                          .replace(/\[Company\]/g, data?.companyName || data?.jobDetails?.company || "your company")
+                          .replace(/\n/g, "<br />") 
+                      }}
                     />
                   </div>
                 </div>
               )}
-            </div>
-
-            {/* LinkedIn Message Draft - No collapsible, just carousel */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">LinkedIn Draft</label>
-              <div className="border rounded-lg bg-gray-50">
-                <div className="flex items-center justify-between p-2 border-b bg-white rounded-t-lg">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500 capitalize">{messageTypes[linkedInMessageIndex]}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setLinkedInMessageIndex(Math.max(0, linkedInMessageIndex - 1))}
-                      disabled={linkedInMessageIndex === 0}
-                      className="h-6 w-6 p-0"
-                    >
-                      <ChevronLeft className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() =>
-                        setLinkedInMessageIndex(Math.min(messageTypes.length - 1, linkedInMessageIndex + 1))
-                      }
-                      disabled={linkedInMessageIndex === messageTypes.length - 1}
-                      className="h-6 w-6 p-0"
-                    >
-                      <ChevronRight className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
-                <div className="p-4 bg-white rounded-b-lg border-t">
-                  <p
-                    className="text-gray-700 whitespace-pre-wrap text-sm"
-                    dangerouslySetInnerHTML={{
-                      __html: currentLinkedInMessage
-                        .replace(/\[Name\]/g, `<strong>${contact?.name || "there"}</strong>`)
-                        .replace(/\[Job Title\]/g, `<strong>${data?.jobDetails?.title || "the role"}</strong>`)
-                        .replace(/\[Company\]/g, `<strong>${data?.jobDetails?.company || "your company"}</strong>`)
-                        .replace(/\n/g, "<br />"),
-                    }}
-                  />
-                </div>
-              </div>
             </div>
           </div>
         </CardContent>
@@ -436,7 +455,7 @@ export default function ResultsPage() {
               {data.departmentHeadEmail && (
                 <ContactSection
                   contact={{
-                    name: `${data.departmentHeadFirstName || ''} ${data.departmentHeadLastName || ''}`.trim() || "LikelyHiring Manager",
+                    name: `${data.departmentHeadFirstName || ''} ${data.departmentHeadLastName || ''}`.trim() || "Hiring Manager",
                     title: "Department Head",
                     email: data.departmentHeadEmail,
                     linkedinUrl: data.departmentHeadLinkedInUrl,

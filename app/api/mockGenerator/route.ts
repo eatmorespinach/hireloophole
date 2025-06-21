@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     if (!apiRes.ok) {
       const errorText = await apiRes.text()
       console.error("Logic API error:", errorText)
-      
+
       // Instead of throwing an error, return fallback data
       console.log("Returning fallback data due to API failure")
       return NextResponse.json({
@@ -52,10 +52,10 @@ export async function POST(request: NextRequest) {
           linkedinUrl: "https://linkedin.com/in/michaelrodriguez",
           profileImage: "/placeholder-user.jpg"
         },
-        jobDetails: {
+      jobDetails: {
           title: "Software Engineer",
           company: "Tech Company",
-          location: "San Francisco, CA",
+        location: "San Francisco, CA",
           description: "We're looking for a talented software engineer to join our growing team..."
         },
         linkedinMessages: {
