@@ -90,13 +90,27 @@ export async function POST(request: NextRequest) {
           "Research the company's recent product launches and mention them in your outreach",
           "Follow the hiring manager on LinkedIn before reaching out",
           "Keep your initial message concise and focused on value you can bring",
-          "Follow up after 1 week if you don't hear back"
+          "Follow up after 1 week if you don't hear back",
+          "Personalize your message by mentioning specific company achievements or challenges"
         ]
       })
     }
 
     const data = await apiRes.json()
-    return NextResponse.json(data.output)
+    
+    // Add tips to successful API responses since they're helpful for all users
+    const responseWithTips = {
+      ...data.output,
+      tips: [
+        "Research the company's recent product launches and mention them in your outreach",
+        "Follow the hiring manager on LinkedIn before reaching out",
+        "Keep your initial message concise and focused on value you can bring",
+        "Follow up after 1 week if you don't hear back",
+        "Personalize your message by mentioning specific company achievements or challenges"
+      ]
+    }
+    
+    return NextResponse.json(responseWithTips)
   } catch (error) {
     console.error("Error in mockGenerator:", error)
     
@@ -163,7 +177,8 @@ export async function POST(request: NextRequest) {
         "Research the company's recent product launches and mention them in your outreach",
         "Follow the hiring manager on LinkedIn before reaching out",
         "Keep your initial message concise and focused on value you can bring",
-        "Follow up after 1 week if you don't hear back"
+        "Follow up after 1 week if you don't hear back",
+        "Personalize your message by mentioning specific company achievements or challenges"
       ]
     })
   }

@@ -110,12 +110,12 @@ export function Navigation() {
               </button>
             ) : (
               <>
-                <button
-                  onClick={() => router.push("/login")}
-                  className="text-gray-600 hover:text-gray-800 font-medium text-sm tracking-wide uppercase transition-colors"
-                >
-                  LOG IN
-                </button>
+              <button
+                onClick={() => router.push("/login")}
+                className="text-gray-600 hover:text-gray-800 font-medium text-sm tracking-wide uppercase transition-colors"
+              >
+                LOG IN
+              </button>
                 <button
                   onClick={() => router.push("/signup")}
                   className="text-gray-600 hover:text-gray-800 font-medium text-sm tracking-wide uppercase transition-colors ml-2"

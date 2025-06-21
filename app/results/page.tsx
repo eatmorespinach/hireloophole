@@ -416,7 +416,9 @@ export default function ResultsPage() {
       <div className="flex h-screen bg-gray-50/90">
         <ResultsSidebar currentData={data} onLoadSearch={handleLoadSearch} isCollapsed={sidebarCollapsed} />
         <main className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? "ml-16" : "ml-64"}`}>
-          <div className="p-6 space-y-8 h-full overflow-y-auto">
+          <div className="p-6 h-full overflow-y-auto">
+            <div className="grid grid-cols-12 gap-4">
+              <div className="col-span-8 col-start-3 space-y-8">
             <div className="flex justify-between items-center">
               <Button variant="ghost" onClick={() => router.push("/")}>
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back to Search
@@ -426,37 +428,10 @@ export default function ResultsPage() {
               </Button>
             </div>
 
-            {/* Job Details Card */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle>🎯 Job Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {jobDetails ? (
-                  <>
-                    <div className="text-2xl font-bold text-gray-900">{jobDetails.title}</div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-lg text-gray-700">{jobDetails.company}</div>
-                      <Badge variant="secondary">{jobDetails.department}</Badge>
-                    </div>
-                    <div className="text-gray-600">{jobDetails.location}</div>
-                    <a
-                      href={jobDetails.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      View Job Post
-                    </a>
-                  </>
-                ) : (
-                  <div className="italic text-gray-500">Job details not available.</div>
-                )}
-              </CardContent>
-            </Card>
+
 
             {/* Hiring Manager & CEO Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8 pt-2.5">
               {/* Hiring Manager Section */}
               {data.departmentHeadEmail && (
                 <ContactSection
@@ -538,6 +513,8 @@ export default function ResultsPage() {
                 </CardContent>
               </Card>
             )}
+              </div>
+            </div>
           </div>
         </main>
       </div>
