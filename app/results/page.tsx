@@ -539,7 +539,7 @@ export default function ResultsPage() {
 
             {/* Tips Section */}
             {Array.isArray(data.tips) && data.tips.length > 0 && (
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm mb-15">
+              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle>💡 Tips</CardTitle>
                 </CardHeader>
