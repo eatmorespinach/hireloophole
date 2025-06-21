@@ -87,12 +87,14 @@ export function Navigation() {
 
   return (
     <nav className="w-full bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+      <div className="px-4">
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-10 col-start-2">
+            <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push("/")}>
-            <Key className="h-6 w-6 text-orange-500" />
-            <span className="text-xl font-bold bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
+            <Key className="h-6 w-6 text-black" />
+            <span className="text-xl font-bold text-black">
               Hire Loophole
             </span>
           </div>
@@ -124,6 +126,8 @@ export function Navigation() {
                 </button>
               </>
             )}
+          </div>
+            </div>
           </div>
         </div>
       </div>

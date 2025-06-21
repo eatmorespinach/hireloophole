@@ -111,15 +111,15 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50">
+    <div className="min-h-screen bg-white">
       {/* Navigation */}
       <Navigation />
 
       {/* Header */}
-      <header className="pt-12 pb-8 text-center">
+      <header className="pt-12 pb-8 text-center mt-10">
         <div className="flex items-center justify-center gap-2 mb-4">
-          <Key className="h-8 w-8 text-orange-500" />
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
+          <Key className="h-8 w-8 text-black" />
+          <h1 className="text-4xl font-bold text-black">
             Hire Loophole
           </h1>
         </div>
@@ -128,7 +128,7 @@ export default function HomePage() {
 
       {/* Main Content */}
       <main className="flex items-center justify-center px-4">
-        <Card className="w-full max-w-2xl shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+        <Card className="w-full max-w-2xl shadow-lg border border-gray-200 bg-white">
           <CardContent className="p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-3">
@@ -141,8 +141,8 @@ export default function HomePage() {
                   placeholder="https://company.com/careers/your-future-job"
                   value={jobUrl}
                   onChange={handleUrlChange}
-                  className={`h-14 text-lg border-2 focus:ring-orange-400 rounded-xl ${
-                    urlError ? "border-red-300 focus:border-red-400" : "border-gray-200 focus:border-orange-400"
+                  className={`h-14 text-lg border-2 focus:ring-gray-400 rounded-xl ${
+                    urlError ? "border-red-300 focus:border-red-400" : "border-gray-200 focus:border-gray-400"
                   }`}
                   required
                 />
@@ -162,7 +162,7 @@ export default function HomePage() {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowUploadSection(!showUploadSection)}
-                    className="text-gray-600 hover:text-orange-500 p-2 h-auto font-medium"
+                    className="text-gray-600 hover:text-black p-2 h-auto font-medium"
                   >
                     <ChevronDown
                       className={`h-4 w-4 mr-2 transition-transform ${showUploadSection ? "rotate-180" : ""}`}
@@ -173,17 +173,17 @@ export default function HomePage() {
 
                 {/* Expandable Upload Section */}
                 {showUploadSection && (
-                  <div className="mt-4 p-4 bg-orange-50 rounded-xl border border-orange-200 space-y-4 animate-in slide-in-from-top-2 duration-200">
+                  <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-4 animate-in slide-in-from-top-2 duration-200">
                     <h3 className="text-md font-semibold text-gray-700 mb-3">Add context for better personalization</h3>
 
                     {/* Resume Upload */}
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">Resume (PDF, DOC, DOCX)</label>
                       {!resumeFile ? (
-                        <div className="border-2 border-dashed border-orange-300 rounded-lg p-6 text-center hover:border-orange-400 transition-colors">
-                          <Upload className="h-8 w-8 text-orange-400 mx-auto mb-2" />
+                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                          <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                           <label htmlFor="resume-upload" className="cursor-pointer">
-                            <span className="text-orange-600 font-medium hover:text-orange-700">
+                            <span className="text-black font-medium hover:text-gray-700">
                               Click to upload your resume
                             </span>
                             <span className="text-gray-500 block text-sm mt-1">or drag and drop (max 10MB)</span>
@@ -197,10 +197,10 @@ export default function HomePage() {
                           />
                         </div>
                       ) : (
-                        <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-orange-200">
+                        <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
                           <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center">
-                              <Upload className="h-4 w-4 text-orange-600" />
+                            <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center">
+                              <Upload className="h-4 w-4 text-black" />
                             </div>
                             <div>
                               <span className="text-sm font-medium text-gray-700 block">{resumeFile.name}</span>
@@ -228,7 +228,7 @@ export default function HomePage() {
               <Button
                 type="submit"
                 disabled={!jobUrl || isLoading}
-                className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full h-14 text-lg font-semibold bg-black hover:bg-gray-800 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
@@ -254,10 +254,7 @@ export default function HomePage() {
         </Card>
       </main>
 
-      {/* Decorative elements */}
-      <div className="fixed top-20 left-10 w-20 h-20 bg-yellow-200 rounded-full opacity-20 animate-pulse" />
-      <div className="fixed bottom-20 right-10 w-16 h-16 bg-pink-200 rounded-full opacity-20 animate-pulse delay-1000" />
-      <div className="fixed top-1/2 right-20 w-12 h-12 bg-orange-200 rounded-full opacity-20 animate-pulse delay-500" />
+
     </div>
   )
 }
