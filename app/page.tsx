@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Sparkles, Key, ChevronDown, Upload, X } from "lucide-react"
 import { Navigation } from "@/components/navigation"
+import Image from "next/image"
 
 export default function HomePage() {
   const [jobUrl, setJobUrl] = useState("")

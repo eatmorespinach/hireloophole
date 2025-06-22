@@ -7,8 +7,9 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Key, Mail, Lock, ArrowLeft } from "lucide-react"
+import { Mail, Lock, ArrowLeft } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import Image from "next/image"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -118,7 +119,13 @@ export default function LoginPage() {
         <Card className="w-full max-w-md shadow-xl border-0 bg-white/80 backdrop-blur-sm">
           <CardHeader className="text-center pb-4">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <Key className="h-6 w-6 text-orange-500" />
+              <Image 
+                src="/favicon-32x32.png" 
+                alt="Hoodwink the hamster" 
+                width={24} 
+                height={24}
+                className="w-6 h-6"
+              />
               <span className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
                 Your Hiring Advantage
               </span>

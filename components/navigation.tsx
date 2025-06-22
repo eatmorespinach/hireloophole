@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Key } from "lucide-react"
+import Image from "next/image"
 import { supabase } from "@/lib/supabase"
 import type { User } from '@supabase/supabase-js'
 
@@ -93,7 +93,13 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push("/")}>
-            <Key className="h-6 w-6 text-black" />
+            <Image 
+              src="/favicon-32x32.png" 
+              alt="Hoodwink the hamster" 
+              width={24} 
+              height={24}
+              className="w-6 h-6"
+            />
             <span className="text-xl font-bold text-black">
               Your Hiring Advantage
             </span>

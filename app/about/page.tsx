@@ -1,7 +1,7 @@
 "use client"
 
 import { Navigation } from "@/components/navigation"
-import { Key, Mail, Target, Users, Zap, Briefcase } from "lucide-react"
+import { Mail, Target, Users, Zap, Briefcase } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
@@ -14,15 +14,8 @@ export default function AboutPage() {
       <div className="container max-w-2xl mx-auto px-4 py-12 space-y-20">
         {/* Header */}
         <header className="space-y-8">
-          <div className="flex items-center justify-center">
-            <div className="h-12 w-12 rounded-md bg-black flex items-center justify-center">
-              <Key className="h-6 w-6 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold ml-2">Your Hiring Advantage</h1>
-          </div>
-          <div className="text-center space-y-4">
-            <h2 className="text-4xl font-bold tracking-tight">About Us</h2>
-            <p className="text-xl text-muted-foreground">We're building the future of job searching.</p>
+          <div className="text-center space-y-6">
+            <p className="text-xl text-muted-foreground">Meet Hoodwink the hamster. Your hiring advantage.</p>
           </div>
         </header>
 
@@ -47,11 +40,13 @@ export default function AboutPage() {
 
         {/* Story */}
         <section className="space-y-6">
-          <h3 className="text-lg font-medium">Our Story</h3>
+          <h3 className="text-lg font-medium">Inspiration</h3>
           <p className="text-muted-foreground leading-relaxed">
-            Founded in 2024, Your Hiring Advantage was born out of frustration with the broken job application process. After
-            watching countless talented professionals send hundreds of applications into the void, our founders realized
-            that the system was designed to filter people out, not let the right ones in.
+          
+          Inspired by my own and other folks's grumblings around the ineffectiveness of applying to a job and throwing a resume into the black hole, as well as seeing Eisenberg's idea browser around jobs, and the cherry on top was seeing a New York Times article around how hiring is broken. I decided to take on this idea. 
+          <br />
+          <br />
+          Founded in 2024, Your Hiring Advantage was born out of frustration with the broken job application process. After watching countless talented professionals send hundreds of applications into the void, our founders realized that the system was designed to filter people out, not let the right ones in.
           </p>
           <p className="text-muted-foreground leading-relaxed">
             We started with a simple insight: the people who make hiring decisions aren't hiding—they're just buried under
