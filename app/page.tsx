@@ -120,7 +120,7 @@ export default function HomePage() {
         <div className="flex items-center justify-center gap-2 mb-4">
           <Key className="h-8 w-8 text-black" />
           <h1 className="text-4xl font-bold text-black">
-            Hire Loophole
+            Your Hiring Advantage
           </h1>
         </div>
         <p className="text-xl text-gray-600 font-medium">Skip the resume pile. Reach the hiring boss in one click.</p>

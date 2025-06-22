@@ -90,7 +90,7 @@ const mockCEO = {
 // Mock LinkedIn messages
 const mockLinkedInMessages = {
   standard:
-    "Hey [Name],\n\nI saw the [Job Title] at [Company] and I'm really excited about the opportunity. I'd love to connect and learn more about the position.",
+    "Hey [Name],\n\nLove what [Company]'s doing and as a rolehere, I'd love to connect and learn more about the position.",
   personal:
     "Hey [Name]!\n\nI've been following [Company]'s journey and I'm genuinely impressed by your recent work on [specific project]. I'd love to chat about the [Job Title].",
   silly:

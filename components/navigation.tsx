@@ -95,8 +95,24 @@ export function Navigation() {
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push("/")}>
             <Key className="h-6 w-6 text-black" />
             <span className="text-xl font-bold text-black">
-              Hire Loophole
+              Your Hiring Advantage
             </span>
+          </div>
+
+          {/* Center Navigation Links */}
+          <div className="flex items-center gap-8">
+            <button
+              onClick={() => router.push("/")}
+              className="text-gray-600 hover:text-gray-800 font-medium text-sm tracking-wide uppercase transition-colors"
+            >
+              OUTREACH KIT
+            </button>
+            <button
+              className="text-gray-600 hover:text-gray-800 font-medium text-sm tracking-wide uppercase transition-colors cursor-not-allowed opacity-60"
+              disabled
+            >
+              SMART REFERRAL
+            </button>
           </div>
 
           {/* Auth Links */}

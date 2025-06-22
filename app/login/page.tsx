@@ -120,7 +120,7 @@ export default function LoginPage() {
             <div className="flex items-center justify-center gap-2 mb-4">
               <Key className="h-6 w-6 text-orange-500" />
               <span className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
-                Hire Loophole
+                Your Hiring Advantage
               </span>
             </div>
             <CardTitle className="text-xl font-bold text-gray-800">Welcome back</CardTitle>

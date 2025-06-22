@@ -1,152 +1,147 @@
 "use client"
 
 import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
-import { Key, Target, Users, Mail, Zap } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { Key, Mail, Target, Users, Zap, Briefcase } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import Image from "next/image"
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gray-50/90 flex flex-col">
+    <div className="min-h-screen bg-white">
       <Navigation />
       
-      {/* Hero Section */}
-      <header className="pt-16 pb-12 text-center bg-white">
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-6 col-start-4">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Key className="h-12 w-12 text-black" />
-              <h1 className="text-5xl font-bold text-black">About Hire Loophole</h1>
+      <div className="container max-w-2xl mx-auto px-4 py-12 space-y-20">
+        {/* Header */}
+        <header className="space-y-8">
+          <div className="flex items-center justify-center">
+            <div className="h-12 w-12 rounded-md bg-black flex items-center justify-center">
+              <Key className="h-6 w-6 text-white" />
             </div>
-            <p className="text-xl text-gray-600 font-medium leading-relaxed">
-              We believe the best opportunities shouldn't be buried in resume piles. 
-              <br />
-              Skip the line and reach decision-makers directly.
-            </p>
+            <h1 className="text-2xl font-bold ml-2">Your Hiring Advantage</h1>
           </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="flex-1 p-6">
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-6 col-start-4 space-y-12">
-          
-            {/* Mission Section */}
-            <section className="text-center bg-white rounded-lg p-8 shadow-sm">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Job searching shouldn't feel like throwing your resume into a black hole. 
-                We built Hire Loophole to help talented people connect directly with hiring managers and CEOs, 
-                cutting through the noise to land interviews that matter.
-              </p>
-            </section>
-
-            {/* How It Works */}
-            <section className="bg-white rounded-lg p-8 shadow-sm">
-              <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">How It Works</h2>
-              <div className="space-y-6">
-                <div className="flex items-center gap-6 p-6 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                  <Target className="h-16 w-16 text-blue-600 flex-shrink-0" />
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">1. Find the Job</h3>
-                    <p className="text-gray-700">
-                      Paste any job posting URL and we'll analyze the company structure to identify key decision-makers.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-6 p-6 bg-green-50 rounded-lg border-l-4 border-green-500">
-                  <Users className="h-16 w-16 text-green-600 flex-shrink-0" />
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">2. Find the People</h3>
-                    <p className="text-gray-700">
-                      We identify hiring managers, department heads, and CEOs with their contact information and LinkedIn profiles.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-6 p-6 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                  <Mail className="h-16 w-16 text-purple-600 flex-shrink-0" />
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">3. Craft the Message</h3>
-                    <p className="text-gray-700">
-                      Get personalized email and LinkedIn message templates that you can customize and send directly.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Why It Works */}
-            <section className="bg-white rounded-lg p-8 shadow-sm">
-              <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">Why Direct Outreach Works</h2>
-              <div className="space-y-6">
-                <div className="flex items-start gap-4 p-4 bg-yellow-50 rounded-lg">
-                  <Zap className="h-8 w-8 text-yellow-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Stand Out From the Crowd</h3>
-                    <p className="text-gray-700">
-                      While hundreds of candidates apply through job boards, direct outreach gets you noticed by decision-makers.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg">
-                  <Target className="h-8 w-8 text-blue-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Skip the Gatekeepers</h3>
-                    <p className="text-gray-700">
-                      Reach hiring managers and executives directly, bypassing HR filters and applicant tracking systems.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-4 p-4 bg-green-50 rounded-lg">
-                  <Users className="h-8 w-8 text-green-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Build Real Connections</h3>
-                    <p className="text-gray-700">
-                      Personal outreach creates genuine relationships that can lead to opportunities beyond just one role.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-4 p-4 bg-purple-50 rounded-lg">
-                  <Mail className="h-8 w-8 text-purple-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Higher Response Rates</h3>
-                    <p className="text-gray-700">
-                      Personalized messages to key contacts typically see 10x higher response rates than mass applications.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Company Values */}
-            <section className="text-center bg-white rounded-lg p-8 shadow-sm">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Built for Job Seekers</h2>
-              <div className="space-y-6">
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  We're not another recruitment platform trying to monetize your data. 
-                  We're a tool built by people who've been through the job search grind and wanted something better.
-                </p>
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  Every feature is designed to give you the advantage you deserve: 
-                  direct access to decision-makers, personalized messaging, and the confidence that comes with knowing 
-                  your application won't get lost in the shuffle.
-                </p>
-              </div>
-            </section>
-            
+          <div className="text-center space-y-4">
+            <h2 className="text-4xl font-bold tracking-tight">About Us</h2>
+            <p className="text-xl text-muted-foreground">We're building the future of job searching.</p>
           </div>
-        </div>
-      </main>
+        </header>
 
-      {/* Footer with extra spacing */}
-      <div className="mt-16">
-        <Footer />
+        {/* Mission */}
+        <section className="space-y-6">
+          <h3 className="text-lg font-medium">Our Mission</h3>
+          <p className="text-muted-foreground leading-relaxed">
+            At Your Hiring Advantage, we believe that talent should connect directly with opportunity. We're on a mission to
+            eliminate the resume black hole and help job seekers reach decision-makers who can actually hire them. Our platform
+            cuts through the noise of traditional job applications and brings clarity to career advancement.
+          </p>
+          <div className="pt-4">
+            <Image
+              src="/placeholder.svg?height=400&width=800"
+              alt="Professional connecting directly with hiring manager"
+              width={800}
+              height={400}
+              className="rounded-lg"
+            />
+          </div>
+        </section>
+
+        {/* Story */}
+        <section className="space-y-6">
+          <h3 className="text-lg font-medium">Our Story</h3>
+          <p className="text-muted-foreground leading-relaxed">
+            Founded in 2024, Your Hiring Advantage was born out of frustration with the broken job application process. After
+            watching countless talented professionals send hundreds of applications into the void, our founders realized
+            that the system was designed to filter people out, not let the right ones in.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            We started with a simple insight: the people who make hiring decisions aren't hiding—they're just buried under
+            layers of process. What if we could help job seekers reach them directly? After months of research and development,
+            we launched our beta to help professionals skip the line and land interviews that matter.
+          </p>
+        </section>
+
+        {/* Team */}
+        <section className="space-y-8">
+          <h3 className="text-lg font-medium">Our Team</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[
+              {
+                name: "Sarah Martinez",
+                role: "Founder & CEO",
+                image: "/placeholder-user.jpg",
+              },
+              {
+                name: "David Chen",
+                role: "Co-Founder & CTO",
+                image: "/placeholder-user.jpg",
+              },
+            ].map((member) => (
+              <div key={member.name} className="flex flex-col items-center text-center space-y-2">
+                <Image
+                  src={member.image || "/placeholder.svg"}
+                  alt={member.name}
+                  width={100}
+                  height={100}
+                  className="rounded-full"
+                />
+                <h4 className="font-medium">{member.name}</h4>
+                <p className="text-sm text-muted-foreground">{member.role}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Values */}
+        <section className="space-y-6">
+          <h3 className="text-lg font-medium">Our Values</h3>
+          <ul className="space-y-4">
+            {[
+              {
+                title: "Direct Access",
+                description: "We believe in connecting talent directly with decision-makers, not gatekeepers.",
+              },
+              {
+                title: "Job Seeker First",
+                description: "Every feature we build starts with what job seekers actually need to succeed.",
+              },
+              {
+                title: "Results Over Process",
+                description: "We care about landing interviews, not following outdated application procedures.",
+              },
+              {
+                title: "Transparency",
+                description: "We show you exactly who you're reaching and how to connect with them effectively.",
+              },
+            ].map((value) => (
+              <li key={value.title} className="space-y-1">
+                <h4 className="font-medium">{value.title}</h4>
+                <p className="text-sm text-muted-foreground">{value.description}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Contact */}
+        <section className="space-y-6">
+          <h3 className="text-lg font-medium">Get in Touch</h3>
+          <p className="text-muted-foreground">
+            We're always looking to connect with job seekers, hiring managers, and career professionals.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Button className="flex items-center gap-2">
+              <Mail className="h-4 w-4" />
+              <span>hello@hireloophole.com</span>
+            </Button>
+            <Button variant="outline" className="bg-white text-black">
+              <Link href="/">Try Your Hiring Advantage</Link>
+            </Button>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="pt-12 border-t text-center text-sm text-muted-foreground">
+          <p>© {new Date().getFullYear()} Your Hiring Advantage. All rights reserved.</p>
+        </footer>
       </div>
     </div>
   )

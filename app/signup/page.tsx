@@ -226,7 +226,7 @@ export default function SignupPage() {
                 <span className="font-semibold text-gray-800">Join 10,000+ job seekers</span>
               </div>
               <p className="text-sm text-gray-600">
-                "I got 3 interviews in my first week using Hire Loophole. This completely changed my job search game!" -
+                                  "I got 3 interviews in my first week using Your Hiring Advantage. This completely changed my job search game!" -
                 Sarah M.
               </p>
           </div>

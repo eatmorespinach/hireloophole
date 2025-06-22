@@ -11,7 +11,7 @@ export function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Company info */}
             <div className="col-span-1 md:col-span-2">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Hire Loophole</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Hiring Advantage</h3>
               <p className="text-gray-600 text-sm mb-4 max-w-md">
                 Skip the resume pile. Reach the hiring boss in one click. Find decision-makers and craft personalized outreach that gets results.
               </p>
@@ -71,7 +71,7 @@ export function Footer() {
           <div className="mt-8 pt-6 border-t border-gray-200">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <p className="text-sm text-gray-500">
-                © {new Date().getFullYear()} Hire Loophole. All rights reserved.
+                © {new Date().getFullYear()} Your Hiring Advantage. All rights reserved.
               </p>
               <div className="mt-4 md:mt-0">
                 <p className="text-sm text-gray-500">
