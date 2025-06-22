@@ -101,6 +101,12 @@ export function Navigation() {
 
           {/* Auth Links */}
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => router.push("/about")}
+              className="text-gray-600 hover:text-gray-800 font-medium text-sm tracking-wide uppercase transition-colors mr-4"
+            >
+              ABOUT
+            </button>
             {loading ? (
               <div className="w-16 h-4 bg-gray-200 animate-pulse rounded"></div>
             ) : user ? (
