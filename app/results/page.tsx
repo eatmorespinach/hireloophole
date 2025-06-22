@@ -90,11 +90,11 @@ const mockCEO = {
 // Mock LinkedIn messages
 const mockLinkedInMessages = {
   standard:
-    "Hi [Name], I saw the [Job Title] at [Company] and I'm really excited about the opportunity. I'd love to connect and learn more about the position.",
+    "Hey [Name],\n\nI saw the [Job Title] at [Company] and I'm really excited about the opportunity. I'd love to connect and learn more about the position.",
   personal:
-    "Hey [Name]! I've been following [Company]'s journey and I'm genuinely impressed by your recent work on [specific project]. I'd love to chat about the [Job Title].",
+    "Hey [Name]!\n\nI've been following [Company]'s journey and I'm genuinely impressed by your recent work on [specific project]. I'd love to chat about the [Job Title].",
   silly:
-    "Hi [Name]! 🚀 I promise I'm more professional than this emoji suggests, but I had to reach out about the [Job Title] at [Company]",
+    "Hi [Name]!\n\n🚀 I promise I'm more professional than this emoji suggests, but I had to reach out about the [Job Title] at [Company]",
 }
 
 // Mock Email messages - 50% shorter
@@ -387,7 +387,7 @@ export default function ResultsPage() {
                     </div>
                   </div>
                   <div className="p-4 bg-white rounded-b-lg border-t">
-                    <h4 className="text-md font-semibold text-gray-800 mb-2">
+                    <h4 className="text-md font-semibold text-gray-800 mb-4">
                       {currentEmailMessage.subject
                         .replace(/\[Name\]/g, getFirstName(contact?.name || ""))
                         .replace(/\[Job Title\]/g, data?.jobDetails?.title || "this role")
@@ -460,7 +460,7 @@ export default function ResultsPage() {
         <main className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? "ml-0" : "ml-0"}`}>
           <div className="p-6">
             <div className="grid grid-cols-12 gap-4">
-              <div className="col-span-8 col-start-3 space-y-8">
+              <div className="col-span-6 col-start-4 space-y-8">
             <div className="flex justify-start items-center">
               <Button variant="ghost" onClick={() => router.push("/")}>
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back to Search
